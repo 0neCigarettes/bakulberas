@@ -8,18 +8,18 @@
 					<div class="card-header">
 						<div class="head-label">
 						<h6 class="mb-0">
-							PESANAN PEMBELIAN
+							PENGELUARAN PEMBELIAN
 						</h6>
 						</div>
 					</div>
-					<form class="form form-horizontal" method="post" action="{{route('poInsert')}}">
+					<form class="form form-horizontal" method="post" action="{{route('soInsert')}}">
 						@csrf
 						<div class="card-body">
 							<div class="row">
-								<div class="col-md-2">
+								<div class="col-md-3">
 									<div class="mb-1">
 										<label class="col-form-label" for="kode">Kode</label>
-										<input type="text" id="kode" class="form-control" v-model="kode" name="o[kode]" required="true" readonly="true" value="PO-{{$time}}"/>
+										<input type="text" id="kode" class="form-control" v-model="kode" name="o[kode]" required="true" readonly="true" value="SO-{{$time}}"/>
 									</div>
 								</div>
 								<div class="col-md-3">
@@ -28,38 +28,36 @@
 										<input type="date" autocomplete="off" id="tanggal" class="form-control" name="o[tanggal]" v-model="tanggal" required="true" placeholder="yyyy-mm-dd"/>
 									</div>
 								</div>
-								<div class="col-md-4">
+								<div class="col-md-6">
 									<div class="mb-1">
-										<label class="col-form-label" for="suplier">Suplier</label>
-                    <select id="suplier" name="o[suplier_id]" class="form-select" required="true">
-											<option value="">Pilih suplier</option>
-											@foreach($supliers as $i)
-                        <option value="{{$i->id}}">{{$i->nama}}</option>
+										<label class="col-form-label" for="customer">Customer</label>
+										<select id="customer" name="o[customer_id]" class="form-select" required="true">
+											<option value="">Pilih customer</option>
+											@foreach($customer as $i)
+												<option value="{{$i->id}}">{{$i->nama}}</option>
 											@endforeach
-                    </select>
+										</select>
 									</div>
 								</div>
+								<div class="col-md-6">
+									<div class="mb-1">
+										<label class="col-form-label" for="sales">Seller</label>
+										<select id="seller" name="o[seller_id]" class="form-select" required="true">
+											<option value="">Pilih seller</option>
+											@foreach($sales as $i)
+												<option value="{{$i->id}}">{{$i->nama}}</option>
+											@endforeach
+										</select>
+									</div>
+								</div>
+								
 								<div class="col-md-3">
 									<div class="mb-1">
 										<label class="col-form-label" for="jumlah">Jumlah</label>
 										<input type="number" autocomplete="off" id="jumlah" class="form-control" name="o[jumlah]" v-model="jumlah"  required="true" placeholder="0" readonly="true"/>
 									</div>
 								</div>
-							</div>
-							<div class="row">
 								<div class="col-md-3">
-									<div class="mb-1">
-										<label class="col-form-label" for="potongan">Potongan/Biaya</label>
-										<input type="number" autocomplete="off" id="potongan" class="form-control" name="o[potongan]" v-model="potongan" @input="Potongan($event)" placeholder="0"/>
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="mb-1">
-										<label class="col-form-label" for="ongkir">Total</label>
-										<input type="number" autocomplete="off" v-model="total" id="total" class="form-control" name="o[total]" v-model="total" readonly required="true" placeholder="0"/>
-									</div>
-								</div>
-								<div class="col-md-6">
 									<div class="mb-1">
 										<label class="col-form-label" for="info">Info</label>
 										<input type="text" id="info" class="form-control" name="o[info]" required="true" v-model="info" placeholder="..."/>
@@ -126,7 +124,7 @@
 					<div class="modal-body">
 					<div class="mb-1">
 						<label class="col-form-label">Produk</label>
-						{{-- <vue-bootstrap-typeahead v-model="item.product_id" :data="products" style="width: 100%" placeholder="Cari nama product..." :serializer="s => s.nama" @hit="getProduct($event)" style="width: 100%" /> --}}
+						{{-- <vue-bootstrap-typeahead v-model="item.product_id" :data="products" style="width: 100%" placeholder="Cari nama product..." :serializer="s => s.nama" @hit="getProduct($event)" /> --}}
 							<v-select class="style-chooser" label="nama" @input="getProduct" :options="products" v-model="product"></v-select>
 						</div>
 					<div class="mb-1">
@@ -178,17 +176,17 @@ Vue.component('v-select', VueSelect.VueSelect);
 			jumlah: null
 		}
 	}
-
+  
 new Vue({
   el: '#app',
   component: VueBootstrapTypeahead,
   data() {
 		return {
-			suppliers: {!!json_encode($supliers)!!},
+			customer: {!!json_encode($customer)!!},
 			products: {!!json_encode($products)!!},
-			kode: "PO-{{$time}}",
+			kode: "SO-{{$time}}",
 			tanggal: null,
-			suplier_id: null,
+			customer_id: null,
 			jumlah: null,
 			total: null,
 			info: null,
@@ -219,7 +217,7 @@ new Vue({
 		async getProduct(val) {
 			this.item.product_id = val.id
 			this.item.nama = val.nama
-			this.item.harga = val.beli;
+			this.item.harga = val.jual;
 		},
 		async addItem() {
 			this.item.jumlah = parseInt(this.item.qty) * this.item.harga;

@@ -1,6 +1,5 @@
-{% extends "layouts/master.twig" %}
-{% block content %}
-
+@extends('layouts.master')
+@section('content')
 	<section id="basic-horizontal-layouts">
 		<div class="row">
 			<div class="col-md-6 col-12">
@@ -9,8 +8,8 @@
 						<h4 class="card-title">Role Form</h4>
 					</div>
 					<div class="card-body">
-						<form class="form form-horizontal" method="post">
-                            <input type="hidden" nama="o[id]" value="{{item.id}}" />
+						<form class="form form-horizontal" method="post" action="{{ route('rolesInsert')}}">
+							@csrf
 							<div class="row">
 								<div class="col-12">
 									<div class="mb-1 row">
@@ -18,17 +17,17 @@
 											<label class="col-form-label" for="role">Role</label>
 										</div>
 										<div class="col-sm-9">
-											<input type="text" id="role" class="form-control" name="o[role]" value="{{item.role}}"/>
+											<input type="text" autocomplete="off" id="role" class="form-control" name="o[role]" required="true" placeholder="..."/>
 										</div>
 									</div>
 								</div>
 								<div class="col-12">
 									<div class="mb-1 row">
 										<div class="col-sm-3">
-											<label class="col-form-label" for="Info">Info</label>
+											<label class="col-form-label" for="info">Info</label>
 										</div>
 										<div class="col-sm-9">
-											<textarea id="info" class="form-control" name="o[info]">{{item.info}}</textarea>
+											<textarea id="info" class="form-control" name="o[info]" placeholder="..."></textarea>
 										</div>
 									</div>
 								</div>
@@ -43,4 +42,4 @@
 			</div>
 		</div>
 	</section>
-{% endblock %}
+@endsection

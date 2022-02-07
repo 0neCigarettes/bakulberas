@@ -1,5 +1,5 @@
-{% extends "layouts/master.twig" %}
-{% block content %}
+@extends('layouts.master')
+@section('content')
 
 	<section id="basic-horizontal-layouts">
 		<div class="row">
@@ -9,7 +9,8 @@
 						<h4 class="card-title">User Form</h4>
 					</div>
 					<div class="card-body">
-						<form class="form form-horizontal" method="post" enctype="multipart/form-data">
+						<form class="form form-horizontal" method="post" enctype="multipart/form-data" action="{{ route('usersInsert')}}">
+							@csrf
 							<div class="row">
 								<div class="col-12">
 									<div class="mb-1 row">
@@ -49,9 +50,9 @@
 										<div class="col-sm-9">
 											<select id="role" name="o[role_id]" class="form-select" required="true">
 												<option value="">Pilih role</option>
-											{% for item in roles %}
-												<option value="{{item.id}}">{{item.role}}</option>
-											{% endfor %}
+													@foreach($roles as $u)
+														<option value="{{$u['id']}}">{{$u['role']}}</option>
+													@endforeach
 											</select>
 										</div>
 									</div>
@@ -87,4 +88,4 @@
 			</div>
 		</div>
 	</section>
-{% endblock %}
+@endsection

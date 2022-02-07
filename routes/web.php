@@ -19,6 +19,56 @@ Route::get('/', function () {
 
 Route::prefix('sys')->group(function () {
 
+  Route::prefix('/sales')->group(function () {
+    Route::get('/', 'SalesController@index')->name('salesIndex');
+    Route::get('/new', 'SalesController@new')->name('salesNew');
+    Route::post('/insert', 'SalesController@insert')->name('salesInsert');
+    Route::get('/edit/{id}', 'SalesController@edit')->name('salesEdit');
+    Route::get('/update/{id}', 'SalesController@update')->name('salesUpdate');
+    Route::get('/detail/{id}', 'SalesController@detail')->name('salesDetail');
+    Route::get('/delete/{id}', 'SalesController@delete')->name('salesDelete');
+  });
+
+  Route::prefix('/customer')->group(function () {
+    Route::get('/', 'CustomerController@index')->name('customerIndex');
+    Route::get('/new', 'CustomerController@new')->name('customerNew');
+    Route::post('/insert', 'CustomerController@insert')->name('customerInsert');
+    Route::get('/edit/{id}', 'CustomerController@edit')->name('customerEdit');
+    Route::get('/update/{id}', 'CustomerController@update')->name('customerUpdate');
+    Route::get('/detail/{id}', 'CustomerController@detail')->name('customerDetail');
+    Route::get('/delete/{id}', 'CustomerController@delete')->name('customerDelete');
+  });
+
+  Route::prefix('/suplier')->group(function () {
+    Route::get('/', 'SuplierController@index')->name('suplierIndex');
+    Route::get('/new', 'SuplierController@new')->name('suplierNew');
+    Route::post('/insert', 'SuplierController@insert')->name('suplierInsert');
+    Route::get('/edit/{id}', 'SuplierController@edit')->name('suplierEdit');
+    Route::get('/update/{id}', 'SuplierController@update')->name('suplierUpdate');
+    Route::get('/detail/{id}', 'SuplierController@detail')->name('suplierDetail');
+    Route::get('/delete/{id}', 'SuplierController@delete')->name('suplierDelete');
+  });
+
+  Route::prefix('/roles')->group(function () {
+    Route::get('/', 'RolesController@index')->name('rolesIndex');
+    Route::get('/new', 'RolesController@new')->name('rolesNew');
+    Route::post('/insert', 'RolesController@insert')->name('rolesInsert');
+    Route::get('/edit/{id}', 'RolesController@edit')->name('rolesEdit');
+    Route::get('/update/{id}', 'RolesController@update')->name('rolesUpdate');
+    Route::get('/detail/{id}', 'RolesController@detail')->name('rolesDetail');
+    Route::get('/delete/{id}', 'RolesController@delete')->name('rolesDelete');
+  });
+
+  Route::prefix('/users')->group(function () {
+    Route::get('/', 'UsersController@index')->name('usersIndex');
+    Route::get('/new', 'UsersController@new')->name('usersNew');
+    Route::post('/insert', 'UsersController@insert')->name('usersInsert');
+    Route::get('/edit/{id}', 'UsersController@edit')->name('usersEdit');
+    Route::get('/update/{id}', 'UsersController@update')->name('usersUpdate');
+    Route::get('/detail/{id}', 'UsersController@detail')->name('usersDetail');
+    Route::get('/delete/{id}', 'UsersController@delete')->name('usersDelete');
+  });
+
   Route::prefix('/varian')->group(function () {
     Route::get('/', 'VarianController@index')->name('varianIndex');
     Route::get('/new', 'VarianController@new')->name('varianNew');
@@ -63,6 +113,9 @@ Route::prefix('sys')->group(function () {
     Route::get('/', 'PoController@index')->name('poIndex');
     Route::get('/new', 'PoController@new')->name('poNew');
     Route::post('/insert', 'PoController@insert')->name('poInsert');
+    Route::get('/bayar/{id}', function() {
+      return view('pages.po.bayar.index');
+    })->name('poBayar');
     Route::get('/edit/{id}', 'PoController@edit')->name('poEdit');
     Route::get('/update/{id}', 'PoController@update')->name('poUpdate');
     Route::get('/detail/{id}', 'PoController@detail')->name('poDetail');
@@ -78,5 +131,15 @@ Route::prefix('sys')->group(function () {
     Route::get('/detail/{id}', 'RoController@detail')->name('roDetail');
     Route::get('/delete/{id}', 'RoController@delete')->name('roDelete');
     Route::post('/api-detail/{id}', 'RoController@getPoDetail')->name('apiPoDetail');
+  });
+
+  Route::prefix('/so')->group(function () {
+    Route::get('/', 'SoController@index')->name('soIndex');
+    Route::get('/new', 'SoController@new')->name('soNew');
+    Route::post('/insert', 'SoController@insert')->name('soInsert');
+    Route::get('/edit/{id}', 'SoController@edit')->name('soEdit');
+    Route::get('/update/{id}', 'SoController@update')->name('soUpdate');
+    Route::get('/detail/{id}', 'SoController@detail')->name('soDetail');
+    Route::get('/delete/{id}', 'SoController@delete')->name('soDelete');
   });
 });

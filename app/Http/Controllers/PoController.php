@@ -10,8 +10,7 @@ use App\Products;
 
 class PoController extends Controller
 {
-  public function index()
-  {
+  public function index() {
     $this->data['pos'] = Po::join('supliers', 'supliers.id', '=', 'po.suplier_id')
       ->select(
         'po.id',
@@ -24,16 +23,14 @@ class PoController extends Controller
     return view('pages.po.index')->with($this->data);
   }
 
-  public function new()
-  {
+  public function new() {
     $this->data['supliers'] = Suplier::Select('id', 'nama')->get();
-    $this->data['products'] = Products::Select('id', 'nama', 'jual')->get();
+    $this->data['products'] = Products::Select('id', 'nama', 'beli')->get();
     $this->data['time'] = time();
     return view('pages.po.new')->with($this->data);
   }
 
-  public function insert(Request $request)
-  {
+  public function insert(Request $request) {
     $po = $request['o'];
     if (is_null($po['potongan'])) {
       $po['potongan'] = 0;
@@ -54,8 +51,7 @@ class PoController extends Controller
     }
   }
 
-  public function edit($id)
-  {
+  public function edit($id) {
     $this->data['po'] = Po::join('supliers', 'supliers.id', '=', 'po.suplier_id')
       ->select(
         'po.id',
@@ -84,8 +80,7 @@ class PoController extends Controller
     return view('pages.po.edit')->with($this->data);
   }
 
-  public function update(Request $request, $id)
-  {
+  public function update(Request $request, $id) {
     $po = $request['o'];
     if (is_null($po['potongan'])) {
       $po['potongan'] = 0;
@@ -112,8 +107,7 @@ class PoController extends Controller
     }
   }
 
-  public function detail($id)
-  {
+  public function detail($id) {
     $this->data['po'] = Po::join('supliers', 'supliers.id', '=', 'po.suplier_id')
       ->select(
         'po.id',
@@ -142,8 +136,7 @@ class PoController extends Controller
     return view('pages.po.detail')->with($this->data);
   }
 
-  public function delete($id)
-  {
+  public function delete($id) {
     if (Po::find($id)->delete()) {
       return redirect()->route('poIndex');
     } else {

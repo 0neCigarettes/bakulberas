@@ -4,7 +4,7 @@
 		<div class="row">
 			<div class="col-12">
 				<div class="card">
-					<table class="datatables-basic table table-bordered" data-addlink="{{	route('productNew')}}" data-label="PRODUK LIST">
+					<table class="datatables-basic table table-bordered" data-addlink="{{ route('productNew')}}" data-label="PRODUK LIST">
 						<thead>
 							<tr>
 								<th>Kode</th>

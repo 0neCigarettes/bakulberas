@@ -1,15 +1,15 @@
-{% extends "layouts/master.twig" %}
-{% block content %}
-
+@extends('layouts.master')
+@section('content')
 	<section id="basic-horizontal-layouts">
 		<div class="row">
 			<div class="col-md-6 col-12">
 				<div class="card">
 					<div class="card-header">
-						<h4 class="card-title">Suplier Form</h4>
+						<h4 class="card-title">Sales Form</h4>
 					</div>
 					<div class="card-body">
-						<form class="form form-horizontal" method="post" enctype="multipart/form-data">
+						<form class="form form-horizontal" method="post" enctype="multipart/form-data" action="{{ route('salesInsert')}}">
+							@csrf
 							<div class="row">
 								<div class="col-12">
 									<div class="mb-1 row">
@@ -17,7 +17,7 @@
 											<label class="col-form-label" for="kode">Kode</label>
 										</div>
 										<div class="col-sm-9">
-											<input type="text" autocomplete="off" id="kode" class="form-control" name="o[kode]" required="true" value="SUP-{{time}}" readonly="true" />
+											<input type="text" autocomplete="off" id="kode" class="form-control" name="o[kode]" required="true" value="SLS-{{$kode}}" readonly="true" />
 										</div>
 									</div>
 								</div>
@@ -82,4 +82,4 @@
 			</div>
 		</div>
 	</section>
-{% endblock %}
+@endsection

@@ -4,28 +4,28 @@
 		<div class="row">
 			<div class="col-12">
 				<div class="card">
-					<table class="datatables-basic table table-bordered" data-addlink="{{ route('usersNew')}}" data-label="USERS LIST">
+					<table class="datatables-basic table table-bordered" data-addlink="{{ route('suplierNew')}}" data-label="SUPLIER LIST">
 						<thead>
 							<tr>
 								<th></th>
-								<th>Username</th>
-								<th>Realname</th>
-								<th>Role</th>
+								<th>Nama</th>
+								<th>Alamat</th>
+								<th>Telepon</th>
 								<th>Info</th>
 								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
-							@foreach($users as $list)
+							@foreach($suplier as $list)
 								<tr>
 									<td>
 										<div class="avatar m-auto">
-											<img src="{{url('media/foto/thumbs_', $list['avatar'])}}" alt="Avatar" height="40" width="40">
+											<img src="{{ url('media/foto/thumbs_', $list['foto'])}}" alt="Avatar" height="40" width="40">
 										</div>
 									</td>
-									<td>{{$list['username']}}</td>
-									<td>{{$list['realname']}}</td>
-									<td>{{$list['namarole']}}</td>
+									<td>{{$list['nama']}}</td>
+									<td>{{$list['alamat']}}</td>
+									<td>{{$list['telepon']}}</td>
 									<td>{{$list['info']}}</td>
 									<td class="text-center">
 										<div class="d-inline-flex">
@@ -37,7 +37,7 @@
 												</svg>
 											</a>
 											<div class="dropdown-menu dropdown-menu-end">
-												<a href="{{ route('usersDetail', $list['id'])}}" class="dropdown-item">
+												<a href="{{ route('suplierDetail', $list['id'])}}" class="dropdown-item">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text me-50 font-small-4">
 														<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
 														<polyline points="14 2 14 8 20 8"></polyline>
@@ -46,7 +46,7 @@
 														<polyline points="10 9 9 9 8 9"></polyline>
 													</svg>Details</a>
 
-												<a href="{{ route('usersDelete', $list['id'])}}" class="dropdown-item delete-record">
+												<a href="{{ route('suplierDelete', $list['id'])}}" class="dropdown-item delete-record">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 me-50 font-small-4">
 														<polyline points="3 6 5 6 21 6"></polyline>
 														<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -55,7 +55,7 @@
 													</svg>Delete</a>
 											</div>
 										</div>
-										<a href="{{route('usersEdit', $list['id'])}}" class="item-edit">
+										<a href="{{route('suplierEdit', $list['id'])}}" class="item-edit">
 											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit font-small-4">
 												<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
 												<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>

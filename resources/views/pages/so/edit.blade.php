@@ -8,18 +8,18 @@
 					<div class="card-header">
 						<div class="head-label">
 						<h6 class="mb-0">
-							PESANAN PEMBELIAN
+							PENGELUARAN PEMBELIAN
 						</h6>
 						</div>
 					</div>
-					<form class="form form-horizontal" method="post" action="{{route('poInsert')}}">
+					<form class="form form-horizontal" method="get" action="{{route('soUpdate', $so['id'])}}">
 						@csrf
 						<div class="card-body">
 							<div class="row">
 								<div class="col-md-2">
 									<div class="mb-1">
 										<label class="col-form-label" for="kode">Kode</label>
-										<input type="text" id="kode" class="form-control" v-model="kode" name="o[kode]" required="true" readonly="true" value="PO-{{$time}}"/>
+										<input type="text" id="kode" class="form-control" v-model="kode" name="o[kode]" required="true" readonly="true"/>
 									</div>
 								</div>
 								<div class="col-md-3">
@@ -30,13 +30,17 @@
 								</div>
 								<div class="col-md-4">
 									<div class="mb-1">
-										<label class="col-form-label" for="suplier">Suplier</label>
-                    <select id="suplier" name="o[suplier_id]" class="form-select" required="true">
-											<option value="">Pilih suplier</option>
-											@foreach($supliers as $i)
-                        <option value="{{$i->id}}">{{$i->nama}}</option>
+										<label class="col-form-label" for="customer">Customer</label>
+										{{-- <v-select label="nama" required="true" :options="customers" :reduce="c => c.id" v-model="customer_id"></v-select>
+											<label>(@{{customer_id.nama}})</label>
+										<input type="text" hidden name="o[customer_id]" v-model="customer_id" /> --}}
+										<select class="form-control" required name="o[customer_id]">
+											<option value="{{$so['customer_id']}}">{{$so['nama']}}</option>
+											@foreach($customers as $i)
+												<option value="{{$i->id}}">{{$i->nama}}</option>
 											@endforeach
-                    </select>
+										</select>
+										{{-- <vue-bootstrap-typeahead v-model="customer_id" :data="customers" style="width: 100%" placeholder="Cari Customer..." :serializer="s => s.nama" @hit="getCustomerId($event)" style="width: 100%" /> --}}
 									</div>
 								</div>
 								<div class="col-md-3">
@@ -50,7 +54,7 @@
 								<div class="col-md-3">
 									<div class="mb-1">
 										<label class="col-form-label" for="potongan">Potongan/Biaya</label>
-										<input type="number" autocomplete="off" id="potongan" class="form-control" name="o[potongan]" v-model="potongan" @input="Potongan($event)" placeholder="0"/>
+										<input type="number" autocomplete="off" id="potongan" class="form-control" name="o[potongan]" v-model="potongan" @input="Potongan" placeholder="0"/>
 									</div>
 								</div>
 								<div class="col-md-3">
@@ -89,6 +93,7 @@
 								<tr v-for="(p, i) in items" :key="i">
 									<td>@{{p.nama}}</td>
 									<td class="text-end">@{{p.qty}}
+										<input hidden type="text" :name="'items['+i+'][id]'" v-model="p.id"/>
 										<input hidden type="text" :name="'items['+i+'][product_id]'" v-model="p.product_id"/>
 										<input hidden type="text" :name="'items['+i+'][nama]'" v-model="p.nama"/>
 										<input hidden type="text" :name="'items['+i+'][harga]'" v-model="p.harga"/>
@@ -127,7 +132,7 @@
 					<div class="mb-1">
 						<label class="col-form-label">Produk</label>
 						{{-- <vue-bootstrap-typeahead v-model="item.product_id" :data="products" style="width: 100%" placeholder="Cari nama product..." :serializer="s => s.nama" @hit="getProduct($event)" style="width: 100%" /> --}}
-							<v-select class="style-chooser" label="nama" @input="getProduct" :options="products" v-model="product"></v-select>
+							<v-select label="nama" @input="getProduct" :options="products" v-model="product"></v-select>
 						</div>
 					<div class="mb-1">
 						<label class="col-form-label" for="_harga">Harga</label>
@@ -151,15 +156,6 @@
 @section('css')
 <link href="https://unpkg.com/vue-bootstrap-typeahead/dist/VueBootstrapTypeahead.css" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
-<style>
-	.style-chooser .vs__search::placeholder,
-	.style-chooser .vs__dropdown-toggle,
-	.style-chooser .vs__dropdown-menu {
-	background: #efefef;
-	color: #6e6b7b;
-	height: 40px;
-	}
-</style>
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
@@ -177,18 +173,17 @@ Vue.component('v-select', VueSelect.VueSelect);
 			qty: null,
 			jumlah: null
 		}
-	}
-
+	}  
 new Vue({
   el: '#app',
   component: VueBootstrapTypeahead,
   data() {
 		return {
-			suppliers: {!!json_encode($supliers)!!},
+			customers: {!!json_encode($customers)!!},
 			products: {!!json_encode($products)!!},
-			kode: "PO-{{$time}}",
+			kode: null,
 			tanggal: null,
-			suplier_id: null,
+			customer_id: null,
 			jumlah: null,
 			total: null,
 			info: null,
@@ -197,6 +192,9 @@ new Vue({
 			item: product(),
 			items: []
 		}
+	},
+	async created() {
+		await this.setData()
 	},
 	computed: {
 		totalItems: function() {
@@ -209,23 +207,38 @@ new Vue({
 		}
 	},
 	methods: {
+		async setData() {
+			const data = {...await {!!json_encode($so)!!}, items: await {!!json_encode($soDetail)!!}}
+			this.kode = data.kode
+			this.tanggal = data.tanggal
+			this.customer_id = { id: data.customer_id, nama: data.nama }
+			this.potongan = data.potongan
+			this.total = data.total
+			this.jumlah = data.jumlah
+			this.info = data.info
+			this.items = data.items.map(i => {
+				i.jumlah = i.qty * i.harga
+				return {
+					...i
+				}
+			})
+		},
 		formatPrice(value) {
 			let val = (value / 1).toFixed(0).replace('.', ',')
 			return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 		},
-		async Potongan(e) {
-			this.total = this.jumlah ? this.jumlah - e.target.value : 0
+		async Potongan() {
+			this.total = this.jumlah ? this.jumlah - this.potongan : 0
 		},
 		async getProduct(val) {
 			this.item.product_id = val.id
 			this.item.nama = val.nama
-			this.item.harga = val.beli;
+			this.item.harga = val.jual;
 		},
 		async addItem() {
 			this.item.jumlah = parseInt(this.item.qty) * this.item.harga;
 			await this.items.push(this.item);
 			this.total = this.jumlah - (this.potongan ? this.potongan : 0)
-			this.product = null
 			this.item = {...product()};
 			$('#modalToggle').modal('hide')
 		}

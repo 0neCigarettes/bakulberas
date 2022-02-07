@@ -1,11 +1,10 @@
-{% extends "layouts/master.twig" %}
-
-{% block content %}
+@extends('layouts.master')
+@section('content')
 	<section id="basic-datatable">
 		<div class="row">
 			<div class="col-12">
 				<div class="card">
-					<table class="datatables-basic table table-bordered" data-addlink="{{base_url('sys/roles/new')}}" data-label="ROLE LIST">
+					<table class="datatables-basic table table-bordered" data-addlink="{{ route('rolesNew')}}" data-label="ROLE LIST">
 						<thead>
 							<tr>
 								<th>Role</th>
@@ -14,10 +13,10 @@
 							</tr>
 						</thead>
 						<tbody>
-							{% for item in roles %}
+							@foreach($roles as $list)
 								<tr>
-									<td>{{item.role}}</td>
-									<td>{{item.info}}</td>
+									<td>{{$list['role']}}</td>
+									<td>{{$list['info']}}</td>
 									<td class="text-center">
 										<div class="d-inline-flex">
 											<a class="pe-1 dropdown-toggle hide-arrow text-primary" data-bs-toggle="dropdown">
@@ -28,7 +27,7 @@
 												</svg>
 											</a>
 											<div class="dropdown-menu dropdown-menu-end">
-												<a href="{{base_url('sys/roles/detail/' ~ item.id )}}" class="dropdown-item">
+												<a href="{{ route('rolesDetail', $list['id'])}}" class="dropdown-item">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text me-50 font-small-4">
 														<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
 														<polyline points="14 2 14 8 20 8"></polyline>
@@ -37,7 +36,7 @@
 														<polyline points="10 9 9 9 8 9"></polyline>
 													</svg>Details</a>
 
-												<a href="{{base_url('sys/roles/delete/' ~ item.id )}}" class="dropdown-item delete-record">
+												<a href="{{ route('rolesDelete', $list['id'])}}" class="dropdown-item delete-record">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 me-50 font-small-4">
 														<polyline points="3 6 5 6 21 6"></polyline>
 														<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -46,7 +45,7 @@
 													</svg>Delete</a>
 											</div>
 										</div>
-										<a href="{{base_url('sys/roles/edit/' ~ item.id )}}" class="item-edit">
+										<a href="{{route('rolesEdit', $list['id'])}}" class="item-edit">
 											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit font-small-4">
 												<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
 												<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -54,29 +53,29 @@
 										</a>
 									</td>
 								</tr>
-							{% endfor %}
+							@endforeach
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
 	</section>
-{% endblock %}
+@endsection
 
-{% block js %}
-	<script src="{{base_url('app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js')}}"></script>
-	<script src="{{base_url('app-assets/vendors/js/tables/datatable/dataTables.bootstrap5.min.js')}}"></script>
-	<script src="{{base_url('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js')}}"></script>
-	<script src="{{base_url('app-assets/vendors/js/tables/datatable/responsive.bootstrap5.min.js')}}"></script>
-	<script src="{{base_url('app-assets/vendors/js/tables/datatable/datatables.buttons.min.js')}}"></script>
-	<script src="{{base_url('app-assets/vendors/js/tables/datatable/buttons.html5.min.js')}}"></script>
-	<script src="{{base_url('app-assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js')}}"></script>
-	<script src="{{base_url('app-assets/js/scripts/tables/table-datatables-basic.js')}}"></script>
-{% endblock %}
+@section('js')
+	<script src="{{ url('app/app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js')}}"></script>
+	<script src="{{ url('app/app-assets/vendors/js/tables/datatable/dataTables.bootstrap5.min.js')}}"></script>
+	<script src="{{ url('app/app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js')}}"></script>
+	<script src="{{ url('app/app-assets/vendors/js/tables/datatable/responsive.bootstrap5.min.js')}}"></script>
+	<script src="{{ url('app/app-assets/vendors/js/tables/datatable/datatables.buttons.min.js')}}"></script>
+	<script src="{{ url('app/app-assets/vendors/js/tables/datatable/buttons.html5.min.js')}}"></script>
+	<script src="{{ url('app/app-assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js')}}"></script>
+	<script src="{{ url('app/app-assets/js/scripts/tables/table-datatables-basic.js')}}"></script>
+@endsection
 
-{% block css %}
-	<link rel="stylesheet" type="text/css" href="{{base_url('app-assets/vendors/css/tables/datatable/dataTables.bootstrap5.min.css')}}">
-	<link rel="stylesheet" type="text/css" href="{{base_url('app-assets/vendors/css/tables/datatable/responsive.bootstrap5.min.css')}}">
-	<link rel="stylesheet" type="text/css" href="{{base_url('app-assets/vendors/css/tables/datatable/rowGroup.bootstrap5.min.css')}}">
-	<link rel="stylesheet" type="text/css" href="{{base_url('app-assets/vendors/css/pickers/flatpickr/flatpickr.min.css')}}">
-{% endblock %}
+@section('css')
+	<link rel="stylesheet" type="text/css" href="{{ url('app/app-assets/vendors/css/tables/datatable/dataTables.bootstrap5.min.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{ url('app/app-assets/vendors/css/tables/datatable/responsive.bootstrap5.min.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{ url('app/app-assets/vendors/css/tables/datatable/rowGroup.bootstrap5.min.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{ url('app/app-assets/vendors/css/pickers/flatpickr/flatpickr.min.css')}}">
+@endsection

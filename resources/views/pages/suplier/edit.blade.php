@@ -1,15 +1,15 @@
-{% extends "layouts/master.twig" %}
-{% block content %}
-
+@extends('layouts.master')
+@section('content')
 	<section id="basic-horizontal-layouts">
 		<div class="row">
 			<div class="col-md-6 col-12">
 				<div class="card">
 					<div class="card-header">
-						<h4 class="card-title">Sales Form</h4>
+						<h4 class="card-title">Suplier Form</h4>
 					</div>
 					<div class="card-body">
-						<form class="form form-horizontal" method="post" enctype="multipart/form-data">
+						<form class="form form-horizontal" method="get" enctype="multipart/form-data" action="{{ route('suplierUpdate', $suplier['id'])}}">
+							<input type="hidden" nama="o[id]" value="{{$suplier['id']}}" />
 							<div class="row">
 								<div class="col-12">
 									<div class="mb-1 row">
@@ -17,7 +17,7 @@
 											<label class="col-form-label" for="kode">Kode</label>
 										</div>
 										<div class="col-sm-9">
-											<input type="text" autocomplete="off" id="kode" class="form-control" name="o[kode]" required="true" value="SLS-{{time}}" readonly="true" />
+											<input type="text" autocomplete="off" id="kode" class="form-control" name="o[kode]" required="true" value="{{$suplier['kode']}}" readonly="true" />
 										</div>
 									</div>
 								</div>
@@ -27,7 +27,7 @@
 											<label class="col-form-label" for="nama">Nama</label>
 										</div>
 										<div class="col-sm-9">
-											<input type="text" autocomplete="off" id="nama" class="form-control" name="o[nama]" required="true" placeholder="..."/>
+											<input type="text" autocomplete="off" id="nama" class="form-control" name="o[nama]" required="true" value="{{$suplier['nama']}}"/>
 										</div>
 									</div>
 								</div>
@@ -37,7 +37,7 @@
 											<label class="col-form-label" for="alamat">Alamat</label>
 										</div>
 										<div class="col-sm-9">
-											<textarea id="alamat" class="form-control" name="o[alamat]" placeholder="..."></textarea>
+											<textarea id="alamat" class="form-control" name="o[alamat]" placeholder="...">{{$suplier['alamat']}}</textarea>
 										</div>
 									</div>
 								</div>
@@ -47,7 +47,7 @@
 											<label class="col-form-label" for="telepon">Telepon</label>
 										</div>
 										<div class="col-sm-9">
-											<input type="text" autocomplete="off" id="telepon" class="form-control" name="o[telepon]" required="true" placeholder="..."/>
+											<input type="text" autocomplete="off" id="telepon" class="form-control" name="o[telepon]" required="true" value="{{$suplier['telepon']}}" />
 										</div>
 									</div>
 								</div>
@@ -57,14 +57,20 @@
 											<label class="col-form-label" for="info">Info</label>
 										</div>
 										<div class="col-sm-9">
-											<textarea id="info" class="form-control" name="o[info]" placeholder="..."></textarea>
+											<textarea id="info" class="form-control" name="o[info]" placeholder="...">{{$suplier['info']}}</textarea>
 										</div>
 									</div>
 								</div>
 								<div class="col-12">
 									<div class="mb-1 row">
 										<div class="col-sm-3">
+										@if($suplier['foto'])
+										<div class="avatar m-auto">
+											<img src="{{url('media/foto/thumbs_', $suplier['foto'])}}" alt="Avatar" height="40" width="40">
+										</div>
+										@else
 											<label class="col-form-label" for="foto">Foto</label>
+										@endif
 										</div>
 										<div class="col-sm-9">
 											<input class="form-control" type="file" id="foto" name="foto" />
@@ -82,4 +88,4 @@
 			</div>
 		</div>
 	</section>
-{% endblock %}
+@endsection

@@ -1,6 +1,5 @@
-{% extends "layouts/master.twig" %}
-{% block content %}
-
+@extends('layouts.master')
+@section('content')
 	<section id="basic-horizontal-layouts">
 		<div class="row">
 			<div class="col-md-6 col-12">
@@ -15,22 +14,22 @@
 									<tr>
 										<td>Role</td>
 										<td>:</td>
-										<td>{{item.role}}</td>
+										<td>{{$roles['role']}}</td>
 									</tr>
 									<tr>
 										<td>Info</td>
 										<td>:</td>
-										<td>{{item.info}}</td>
+										<td>{{$roles['info']}}</td>
 									</tr>
 									<tr>
 										<td>Created at</td>
 										<td>:</td>
-										<td>{{item.created_at}}</td>
+										<td>{{$roles['created_at']}}</td>
 									</tr>
 									<tr>
 										<td>Updated at</td>
 										<td>:</td>
-										<td>{{item.updated_at}}</td>
+										<td>{{$roles['updated_at']}}</td>
 									</tr>
 								</tbody>
 							</table>
@@ -40,4 +39,4 @@
 			</div>
 		</div>
 	</section>
-{% endblock %}
+@endsection

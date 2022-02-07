@@ -8,18 +8,17 @@ use App\PoDetail;
 use App\Ro;
 use App\RoDetail;
 
-class RoController extends Controller
+class DoController extends Controller
 {
   public function index() {
     $this->data['time'] = time();
-    $this->data['po'] = Po::join('supliers', 'supliers.id', '=', 'po.suplier_id')
+    $this->data['do'] = Po::join('supliers', 'supliers.id', '=', 'po.suplier_id')
       ->select(
         'po.id',
         'po.kode',
         'po.tanggal',
         'supliers.nama',
-        'po.total',
-        'po.potongan',
+        'po.jumlah',
         'po.status'
       )->get();
     $this->data['ro'] = Ro::join('po', 'po.id', '=', 'ro.po_id')
@@ -78,7 +77,6 @@ class RoController extends Controller
         'po.potongan',
         'po.total',
         'po.bayar',
-        'po.tanggal as tanggalpo',
         'ro.created_at',
         'ro.updated_at',
         'supliers.nama'

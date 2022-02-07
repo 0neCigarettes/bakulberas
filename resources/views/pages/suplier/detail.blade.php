@@ -1,6 +1,5 @@
-{% extends "layouts/master.twig" %}
-{% block content %}
-
+@extends('layouts.master')
+@section('content')
 	<section id="basic-horizontal-layouts">
 		<div class="row">
 			<div class="col-md-6 col-12">
@@ -8,45 +7,45 @@
 					<div class="card-header">
 						<h4 class="card-title">Detail Suplier</h4>
 					</div>
-					<img src="{{base_url('media/foto/' ~ item.foto)}}">
+					<img src="{{url('media/foto/thumbs_', $suplier['foto'])}}">
 					<div class="card-body">
 						<div class="row">
 							<table class="table table-striped table-borderless">
 								<tbody>
 									<tr>
-										<td>Kode</td>
+										<td>KODE</td>
 										<td>:</td>
-										<td>{{item.kode}}</td>
+										<td>{{$suplier['kode']}}</td>
 									</tr>
 									<tr>
-										<td>Nama</td>
+										<td>NAMA</td>
 										<td>:</td>
-										<td>{{item.nama}}</td>
+										<td>{{$suplier['nama']}}</td>
 									</tr>
 									<tr>
-										<td>Alamat</td>
+										<td>ALAMAT</td>
 										<td>:</td>
-										<td>{{item.alamat}}</td>
+										<td>{{$suplier['alamat']}}</td>
 									</tr>
 									<tr>
-										<td>Telepon</td>
+										<td>TELEPON</td>
 										<td>:</td>
-										<td>{{item.telepon}}</td>
+										<td>{{$suplier['telepon']}}</td>
 									</tr>
 									<tr>
-										<td>Info</td>
+										<td>INFO</td>
 										<td>:</td>
-										<td>{{item.info}}</td>
+										<td>{{$suplier['info']}}</td>
 									</tr>
 									<tr>
-										<td>Created at</td>
+										<td>CREATED</td>
 										<td>:</td>
-										<td>{{item.created_at}}</td>
+										<td>{{$suplier['created_at']}}</td>
 									</tr>
 									<tr>
-										<td>Updated at</td>
+										<td>UPDATED</td>
 										<td>:</td>
-										<td>{{item.updated_at}}</td>
+										<td>{{$suplier['updated_at']}}</td>
 									</tr>
 								</tbody>
 							</table>
@@ -56,4 +55,4 @@
 			</div>
 		</div>
 	</section>
-{% endblock %}
+@endsection

@@ -25,7 +25,7 @@ class ProductsController extends Controller
         'varian.varian',
         'merk.merk',
         'satuan.satuan'
-      )->orderBy('merk', 'asc')->get();
+      )->orderBy('merk.merk', 'asc')->get();
     return view('pages.products.index')->with($this->data);
   }
 

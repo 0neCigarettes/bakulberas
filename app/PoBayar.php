@@ -4,19 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Po extends Model
+class PoBayar extends Model
 {
-    protected $table = 'po';
+    protected $table = 'po_bayar';
     protected $fillable = [
+        'po_id',
         'kode',
         'tanggal',
-        'suplier_id',
-        'seller_id',
         'jumlah',
-        'potongan',
-        'total',
-        'bayar',
-        'status',
+        'metode',
         'info'
     ];
 }
