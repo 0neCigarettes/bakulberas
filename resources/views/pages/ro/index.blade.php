@@ -42,7 +42,7 @@
 									</div>
 								</div>
 							</div>
-							<table class="ro table table-bordered" id="itemTable">
+							<table class="table table-bordered" id="itemTable">
 								<thead>
 									<tr>
 										<th>KODE</th>
@@ -72,11 +72,20 @@
 											Rp.@{{formatPrice(item.qty * item.harga)}}
 										</td>
 									</tr>
+									<tr v-if="!items.length > 0">
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+									</tr>
 								</tbody>
 								<tfoot>
 									<tr>
-										<th colspan="4">TOTAL</th>
-										<th id="_total" class="text-end">Rp.@{{formatPrice(po_jumlah)}}</th>
+										<td colspan="4">Subtotal</td>
+										<td>
+											Rp.@{{formatPrice(po_jumlah)}}
+										</td>
 									</tr>
 								</tfoot>
 							</table>
@@ -93,25 +102,29 @@
 		<div class="row">
 			<div class="col-12">
 				<div class="card">
-					<table class="datatables-basic table table-bordered" data-label="PENERIMAAN PEMBELIAN (RO)">
+					<table class="datatables-custom-ro table table-bordered" data-label="PENERIMAAN PEMBELIAN (RO)">
 						<thead>
 							<tr>
-								<th>Kode</th>
+								<th>Kode PO</th>
 								<th>Nama Suplier</th>
-								<th>tanggal</th>
-								<th>Jumlah</th>
-								<th>Action</th>
+								<th>tanggal RO</th>
+								<th>Subtotal PO</th>
+								<th>Potongan/Biaya</th>
+								<th>Total PO</th>
+								<th class="text-center">Action</th>
 							</tr>
 						</thead>
 						<tbody>
-							@foreach($ro as $list)
+							@foreach($po_list as $list)
 								<tr>
-									<td class="text-center">{{$list['kode']}}</td>
+									<td>{{$list['kode']}}</td>
 									<td>{{$list['nama_suplier']}}</td>
-									<td>{{$list['tanggal']}}</td>
+									<td>{{date('d-m-Y', strtotime($list['tanggal']))}}</td>
+									<td>Rp.{{number_format(($list['total'] - ($list['potongan'])),0,',','.')}}</td>
+									<td>Rp.{{number_format($list['potongan'],0,',','.')}}</td>
 									<td>Rp.{{number_format($list['total'],0,',','.')}}</td>
 									<td class="text-center">
-										<a href="{{route('roDetail', $list['id'])}}" class="item-edit">
+										<a href="{{route('roDetail', $list['ro_id'])}}" class="item-edit">
 											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit font-small-4">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
@@ -162,40 +175,34 @@
 <script src="{{ url('app/app-assets/vendors/js/tables/datatable/datatables.buttons.min.js')}}"></script>
 <script src="{{ url('app/app-assets/vendors/js/tables/datatable/buttons.html5.min.js')}}"></script>
 <script src="{{ url('app/app-assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js')}}"></script>
+<script src="{{ url('app/app-assets/js/scripts/tables/table-datatables-basic.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-  $(function () {
-    'use strict'
+var dt_basic_table = $('.datatables-custom-ro'),
+    dt_complex_header_table = $('.dt-complex-header')
 
-    var dt_basic_table = $('.datatables-basic'),
-      dt_complex_header_table = $('.dt-complex-header')
-
-    if ($('body').attr('data-framework') === 'laravel') {
-      assetPath = $('body').attr('data-asset-path')
-    }
-
-    if (dt_basic_table.length) {
-      var dt_basic = dt_basic_table.DataTable({
-        order: [[0, 'desc']],
-        dom:
-          '<"card-header border-bottom p-1"<"head-label"><>><"d-flex justify-content-between align-items-center mx-0 row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"d-flex justify-content-between mx-0 row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-        displayLength: 10,
-        lengthMenu: [10, 25, 50, 75, 100],
-        buttons: [
-          {
-          },
-        ],
-        language: {
-          paginate: {
-            previous: '&nbsp;',
-            next: '&nbsp;',
-          },
+  if ($('body').attr('data-framework') === 'laravel') {
+    assetPath = $('body').attr('data-asset-path')
+  }
+ 
+  if (dt_basic_table.length) {
+    var dt_basic = dt_basic_table.DataTable({
+      order: [[0, 'desc']],
+      dom:
+        '<"card-header border-bottom p-1"<"head-label"><"dt-action-buttons text-end"B>><"d-flex justify-content-between align-items-center mx-0 row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"d-flex justify-content-between mx-0 row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+      displayLength: 10,
+      lengthMenu: [10, 25, 50, 75, 100],
+      buttons: [	],
+      language: {
+        paginate: {
+          previous: '&nbsp;',
+          next: '&nbsp;',
         },
-      })
-      $('div.head-label').html('<h6 class="mb-0">'+dt_basic_table.data('label')+'</h6>')
-    }
-  })
+      },
+    })
+    $('div.head-label').html('<h6 class="mb-0">'+dt_basic_table.data('label')+'</h6>')
+  }
 
 	new Vue({
 		el: '#app',

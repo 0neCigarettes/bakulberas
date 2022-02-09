@@ -31,12 +31,8 @@
 								<div class="col-md-4">
 									<div class="mb-1">
 										<label class="col-form-label" for="suplier">Suplier</label>
-                    <select id="suplier" name="o[suplier_id]" class="form-select" required="true">
-											<option value="">Pilih suplier</option>
-											@foreach($supliers as $i)
-                        <option value="{{$i->id}}">{{$i->nama}}</option>
-											@endforeach
-                    </select>
+										<v-select id="suplier" class="style-chooser" label="nama" name="o[suplier_id]" placeholder="cari nama suplier" :reduce="s => s.id" :options="suppliers" v-model="suplier_id"></v-select>
+										<input type="hidden" name="o[suplier_id]" v-model="suplier_id" />
 									</div>
 								</div>
 								<div class="col-md-3">
@@ -50,7 +46,7 @@
 								<div class="col-md-3">
 									<div class="mb-1">
 										<label class="col-form-label" for="potongan">Potongan/Biaya</label>
-										<input type="number" autocomplete="off" id="potongan" class="form-control" name="o[potongan]" v-model="potongan" @input="Potongan($event)" placeholder="0"/>
+										<input type="number" autocomplete="off" id="potongan" class="form-control" :name="'o[potongan]'" v-model="potongan" @input="Potongan($event)" placeholder="0"/>
 									</div>
 								</div>
 								<div class="col-md-3">
@@ -101,7 +97,7 @@
 							</tbody>
 							<tfoot>
 								<tr>
-									<th colspan="3">TOTAL</th>
+									<th colspan="3">Subtotal</th>
 									<th id="_total" class="text-end">Rp.@{{formatPrice(totalItems)}}</th>
 								</tr>
 							</tfoot>
@@ -120,33 +116,32 @@
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="modalToggleLabel">Add Item</h5>
+					<h5 class="modal-title" id="modalToggleLabel">Tambah Item</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 					<div class="modal-body">
-					<div class="mb-1">
-						<label class="col-form-label">Produk</label>
-						{{-- <vue-bootstrap-typeahead v-model="item.product_id" :data="products" style="width: 100%" placeholder="Cari nama product..." :serializer="s => s.nama" @hit="getProduct($event)" style="width: 100%" /> --}}
-							<v-select class="style-chooser" label="nama" @input="getProduct" :options="products" v-model="product"></v-select>
+						<div class="mb-1">
+							<label class="col-form-label">Produk</label>
+								<v-select class="style-chooser" label="nama" placeholder="cari nama produk..." @input="getProduct" :options="products" v-model="product"></v-select>
+							</div>
+							<div class="mb-1">
+								<label class="col-form-label" for="_harga">Harga</label>
+								<input type="text" v-model="item.harga" class="form-control" placeholder="0" required="true" readonly/>
+							</div>
+							<div class="mb-1">
+								<label class="col-form-label">QTY</label>
+								<input type="number" id="_qty" v-model="item.qty" class="form-control" placeholder="0" required="true"/>
+							</div>
 						</div>
-					<div class="mb-1">
-						<label class="col-form-label" for="_harga">Harga</label>
-						<input type="text" v-model="item.harga" class="form-control" placeholder="0" required="true" readonly/>
-					</div>
-					<div class="mb-1">
-						<label class="col-form-label">QTY</label>
-						<input type="number" id="_qty" v-model="item.qty" class="form-control" placeholder="0" required="true"/>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-primary" v-on:click="addItem" id="add-btn">
-						Tambah Item
-					</button>
+						<div class="modal-footer">
+							<button class="btn btn-primary" :disabled="!item.qty > 0" v-on:click="addItem" id="add-btn">
+								Tambah Item
+							</button>
+						</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 @endsection
 @section('css')
 <link href="https://unpkg.com/vue-bootstrap-typeahead/dist/VueBootstrapTypeahead.css" rel="stylesheet">
@@ -190,6 +185,7 @@ new Vue({
 			tanggal: null,
 			suplier_id: null,
 			jumlah: null,
+			potongan: null,
 			total: null,
 			info: null,
 			harga: null,
@@ -213,8 +209,8 @@ new Vue({
 			let val = (value / 1).toFixed(0).replace('.', ',')
 			return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 		},
-		async Potongan(e) {
-			this.total = this.jumlah ? this.jumlah - e.target.value : 0
+		async Potongan() {
+			this.total = this.jumlah ?  this.jumlah - (-this.potongan) : 0
 		},
 		async getProduct(val) {
 			this.item.product_id = val.id
@@ -224,7 +220,7 @@ new Vue({
 		async addItem() {
 			this.item.jumlah = parseInt(this.item.qty) * this.item.harga;
 			await this.items.push(this.item);
-			this.total = this.jumlah - (this.potongan ? this.potongan : 0)
+			this.total = this.jumlah - (this.potongan ? (-this.potongan) : 0)
 			this.product = null
 			this.item = {...product()};
 			$('#modalToggle').modal('hide')

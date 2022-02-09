@@ -113,13 +113,14 @@ Route::prefix('sys')->group(function () {
     Route::get('/', 'PoController@index')->name('poIndex');
     Route::get('/new', 'PoController@new')->name('poNew');
     Route::post('/insert', 'PoController@insert')->name('poInsert');
-    Route::get('/bayar/{id}', function() {
-      return view('pages.po.bayar.index');
-    })->name('poBayar');
     Route::get('/edit/{id}', 'PoController@edit')->name('poEdit');
     Route::get('/update/{id}', 'PoController@update')->name('poUpdate');
     Route::get('/detail/{id}', 'PoController@detail')->name('poDetail');
     Route::get('/delete/{id}', 'PoController@delete')->name('poDelete');
+    Route::prefix('/bayar')->group(function () {
+      Route::get('/{id}', 'PoController@bayar')->name('bayarIndex');
+      Route::get('/delete/{id}', 'PoController@bayarDelete')->name('poBayarDelete');
+    });
   });
 
   Route::prefix('/ro')->group(function () {

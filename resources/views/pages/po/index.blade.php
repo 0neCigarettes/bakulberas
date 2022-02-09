@@ -11,6 +11,8 @@
 								<th>Tanggal</th>
 								<th>Suplier</th>
 								<th>Jumlah</th>
+								<th>Potongan</th>
+								<th>Total</th>
 								<th>Balance</th>
 								<th>Status</th>
 								<th>Action</th>
@@ -23,6 +25,8 @@
 									<td>{{$list->tanggal}}</td>
 									<td>{{$list->nama}}</td>
 									<td>Rp.{{number_format($list->jumlah,0,',','.')}}</td>
+									<td>Rp.{{number_format($list->potongan,0,',','.')}}</td>
+									<td>Rp.{{number_format($list->total,0,',','.')}}</td>
 									<td>-</td>
 									<td>{{$list->status}}</td>
 									<td class="text-center">
@@ -35,7 +39,7 @@
 												</svg>
 											</a>
 											<div class="dropdown-menu dropdown-menu-end">
-												<a href="{{ route('poBayar', $list->id)}}" class="dropdown-item">
+												<a href="{{ route('bayarIndex', $list->id)}}" class="dropdown-item">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text me-50 font-small-4">
 														<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
 														<polyline points="14 2 14 8 20 8"></polyline>
