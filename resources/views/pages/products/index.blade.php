@@ -11,7 +11,6 @@
 								<th>Produk</th>
 								<th>merk</th>
 								<th>Varian</th>
-								<th>Harga Jual</th>
 								<th>Harga Beli</th>
 								<th>Stock</th>
 								<th>Satuan</th>
@@ -27,7 +26,6 @@
 									<td>{{$list['nama']}}</td>
 									<td>{{$list['merk']}}</td>
 									<td class="text-end">{{$list['varian']}}</td>
-									<td class="text-end">Rp.{{number_format($list['jual'],0,',','.')}}</td>
 									<td class="text-end">Rp.{{number_format($list['beli'],0,',','.')}}</td>
 									<td class="text-end">{{$list['stock']}}</td>
 									<td>{{$list['satuan']}}</td>
@@ -41,7 +39,7 @@
 												</svg>
 											</a>
 											<div class="dropdown-menu dropdown-menu-end">
-												<a href="{{ route('productDetail', $list['id'])}}" class="dropdown-item">
+												<a href="{{ route('productDetail', Crypt::encrypt($list['id']))}}" class="dropdown-item">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text me-50 font-small-4">
 														<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
 														<polyline points="14 2 14 8 20 8"></polyline>
@@ -50,20 +48,14 @@
 														<polyline points="10 9 9 9 8 9"></polyline>
 													</svg>Details</a>
 
-												<a href="{{ route('productDelete', $list['id'])}}" class="dropdown-item delete-record">
-													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 me-50 font-small-4">
-														<polyline points="3 6 5 6 21 6"></polyline>
-														<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-														<line x1="10" y1="11" x2="10" y2="17"></line>
-														<line x1="14" y1="11" x2="14" y2="17"></line>
-													</svg>Delete</a>
+												<a href="{{ route('productDelete', Crypt::encrypt($list['id']))}}" class="dropdown-item delete-record">
+													<i data-feather="trash-2"></i>
+													Delete
+												</a>
 											</div>
 										</div>
-										<a href="{{route('productEdit', $list['id'])}}" class="item-edit">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit font-small-4">
-												<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-												<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-											</svg>
+										<a href="{{route('productEdit', Crypt::encrypt($list['id']))}}" class="item-edit">
+											<i data-feather="edit"></i>
 										</a>
 									</td>
 								</tr>
@@ -74,6 +66,22 @@
 			</div>
 		</div>
 	</section>
+	<div class="modal fade" id="modalToggle" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalToggleLabel">Modal 1</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">Show a second modal and hide this one with the button below.</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" data-bs-target="#modalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">
+						Open second modal
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 @endsection
 
 @section('js')

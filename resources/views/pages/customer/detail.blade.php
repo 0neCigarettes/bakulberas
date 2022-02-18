@@ -43,6 +43,16 @@
 										<td>{{$customer['namasales']}}</td>
 									</tr>
 									<tr>
+										<td>TIPE</td>
+										<td>:</td>
+										<td>{{$customer['type']}}</td>
+									</tr>
+									<tr>
+										<td>LIMIT HUTANG</td>
+										<td>:</td>
+										<td>Rp.{{number_format($customer['limit_hutang'],0,',','.')}}</td>
+									</tr>
+									<tr>
 										<td>CREATED</td>
 										<td>:</td>
 										<td>{{$customer['created_at']}}</td>

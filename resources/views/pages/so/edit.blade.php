@@ -8,75 +8,61 @@
 					<div class="card-header">
 						<div class="head-label">
 						<h6 class="mb-0">
-							PENGELUARAN PEMBELIAN
+							PENGELUARAN PEMBELIAN (Kode: {{$so->kode}})
 						</h6>
 						</div>
 					</div>
-					<form class="form form-horizontal" method="get" action="{{route('soUpdate', $so['id'])}}">
+					<form class="form form-horizontal" method="GET" action="{{ route('soUpdate', $so->id)}}">
 						@csrf
 						<div class="card-body">
 							<div class="row">
-								<div class="col-md-2">
+								<div class="col-md-3">
 									<div class="mb-1">
 										<label class="col-form-label" for="kode">Kode</label>
-										<input type="text" id="kode" class="form-control" v-model="kode" name="o[kode]" required="true" readonly="true"/>
+										<input type="text" id="kode" name="o[kode]" class="form-control" v-model="form.kode" required="true" readonly="true"/>
 									</div>
 								</div>
 								<div class="col-md-3">
 									<div class="mb-1">
 										<label class="col-form-label" for="tanggal">Tanggal</label>
-										<input type="date" autocomplete="off" id="tanggal" class="form-control" name="o[tanggal]" v-model="tanggal" required="true" placeholder="yyyy-mm-dd"/>
-									</div>
-								</div>
-								<div class="col-md-4">
-									<div class="mb-1">
-										<label class="col-form-label" for="customer">Customer</label>
-										{{-- <v-select label="nama" required="true" :options="customers" :reduce="c => c.id" v-model="customer_id"></v-select>
-											<label>(@{{customer_id.nama}})</label>
-										<input type="text" hidden name="o[customer_id]" v-model="customer_id" /> --}}
-										<select class="form-control" required name="o[customer_id]">
-											<option value="{{$so['customer_id']}}">{{$so['nama']}}</option>
-											@foreach($customers as $i)
-												<option value="{{$i->id}}">{{$i->nama}}</option>
-											@endforeach
-										</select>
-										{{-- <vue-bootstrap-typeahead v-model="customer_id" :data="customers" style="width: 100%" placeholder="Cari Customer..." :serializer="s => s.nama" @hit="getCustomerId($event)" style="width: 100%" /> --}}
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="mb-1">
-										<label class="col-form-label" for="jumlah">Jumlah</label>
-										<input type="number" autocomplete="off" id="jumlah" class="form-control" name="o[jumlah]" v-model="jumlah"  required="true" placeholder="0" readonly="true"/>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-3">
-									<div class="mb-1">
-										<label class="col-form-label" for="potongan">Potongan/Biaya</label>
-										<input type="number" autocomplete="off" id="potongan" class="form-control" name="o[potongan]" v-model="potongan" @input="Potongan" placeholder="0"/>
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="mb-1">
-										<label class="col-form-label" for="ongkir">Total</label>
-										<input type="number" autocomplete="off" v-model="total" id="total" class="form-control" name="o[total]" v-model="total" readonly required="true" placeholder="0"/>
+										<input type="date" autocomplete="off" name="o[tanggal]" id="tanggal" class="form-control" v-model="form.tanggal" required="true" placeholder="yyyy-mm-dd"/>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="mb-1">
-										<label class="col-form-label" for="info">Info</label>
-										<input type="text" id="info" class="form-control" name="o[info]" required="true" v-model="info" placeholder="..."/>
+										<label class="col-form-label" for="customer">Customer</label>
+										<v-select placeholder="..." class="style-chooser" label="nama" @input="(c) => { !c ? resetItem() : getCustomer() }" :options="customers" v-model="customer"></v-select>
+										<input type="text" hidden name="o[customer_id]" v-model="form.customer_id"/>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="mb-1">
+										<label class="col-form-label" for="sales">Seller</label>
+										<v-select placeholder="..." class="style-chooser" label="nama" @input="(s) => { if(s) getSeller() }" required="true" :options="sellers" v-model="seller">
+											<template #search="{attributes, events}">
+												<input
+													class="vs__search"
+													:required="!seller"
+													v-bind="attributes"
+													v-on="events"
+												/>
+											</template>
+										</v-select>
+										<input type="text" hidden name="o[seller_id]" v-model="form.seller_id">
+									</div>
+								</div>
+								
+								<div class="col-md-3">
+									<div class="mb-1">
+										<label class="col-form-label" for="jumlah">Jumlah</label>
+										<input type="number" autocomplete="off" name="o[jumlah]" id="jumlah" class="form-control" v-model="form.jumlah"  required="true" placeholder="0" readonly="true"/>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="card-header bg-light">
-							<button type="button" data-bs-toggle="modal" data-bs-target="#modalToggle" class="btn btn-primary waves-effect">
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus me-50 font-small-4">
-									<line x1="12" y1="5" x2="12" y2="19"></line>
-									<line x1="5" y1="12" x2="19" y2="12"></line>
-								</svg>
+							<button :disabled="customer === null" type="button" data-bs-toggle="modal" data-bs-target="#modalToggle" class="btn btn-primary waves-effect">
+								<i data-feather="plus"></i>
 								Tambah Item
 							</button>
 						</div>
@@ -87,21 +73,31 @@
 									<th class="text-end">QTY</th>
 									<th class="text-end">HARGA</th>
 									<th class="text-end">JUMLAH</th>
+									<th class="text-center">AKSI</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="(p, i) in items" :key="i">
-									<td>@{{p.nama}}</td>
-									<td class="text-end">@{{p.qty}}
-										<input hidden type="text" :name="'items['+i+'][id]'" v-model="p.id"/>
-										<input hidden type="text" :name="'items['+i+'][product_id]'" v-model="p.product_id"/>
-										<input hidden type="text" :name="'items['+i+'][nama]'" v-model="p.nama"/>
-										<input hidden type="text" :name="'items['+i+'][harga]'" v-model="p.harga"/>
-										<input hidden type="text" :name="'items['+i+'][qty]'" v-model="p.qty"/>
-										<input hidden type="text" :name="'items['+i+'][jumlah]'" v-model="p.jumlah"/>
+								<tr v-for="(item, i) in form.items" :key="i">
+									<td>@{{item.nama}}
+										<input type="text" hidden :name="'items['+i+'][id]'" v-model="item.id"/>
+										<input type="text" hidden :name="'items['+i+'][product_id]'" v-model="item.product_id"/>
+										<input type="text" hidden :name="'items['+i+'][nama]'" v-model="item.nama"/>
+										<input type="number" hidden :name="'items['+i+'][harga]'" v-model="item.harga"/>
+										<input type="number" hidden :name="'items['+i+'][jumlah]'" v-model="item.jumlah"/>
 									</td>
-									<td class="text-end">Rp.@{{formatPrice(p.harga)}}</td>
-									<td class="text-end">Rp.@{{formatPrice(p.jumlah)}}</td>
+									<td class="text-end"><input type="number" class="form-control" :name="'items['+i+'][qty]'" v-model="item.qty"/></td>
+									<td class="text-end">Rp.@{{formatPrice(item.harga)}}</td>
+									<td class="text-end">Rp.@{{formatPrice(item.harga * item.qty)}}</td>
+									<td class="text-center">
+										<a href="#">
+											<button @click="deleteItem(i)" class="btn btn-icon btn-icon rounded-circle btn-flat-danger">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
+													<polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+													<line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line>
+												</svg>
+											</button>
+									</a>
+									</td>
 								</tr>
 							</tbody>
 							<tfoot>
@@ -113,7 +109,7 @@
 						</table>
 						<div class="card-body">
 							<div class="d-grid">
-								<button type="submit" class="btn btn-primary waves-effect" :disabled="!total > 0">Buat Pesanan</button>
+								<button type="submit" class="btn btn-primary waves-effect" :disabled="!form.jumlah > 0">Simpan</button>
 							</div>
 						</div>
 					</form>
@@ -129,10 +125,18 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 					<div class="modal-body">
+						<label v-if="warn" style="color: red">Harga produk untuk jenis customer ini belum di atur!</label>
+						<label v-if="error" style="color: red">Terjadi kesalahan pada sistem!</label>
 					<div class="mb-1">
 						<label class="col-form-label">Produk</label>
-						{{-- <vue-bootstrap-typeahead v-model="item.product_id" :data="products" style="width: 100%" placeholder="Cari nama product..." :serializer="s => s.nama" @hit="getProduct($event)" style="width: 100%" /> --}}
-							<v-select label="nama" @input="getProduct" :options="products" v-model="product"></v-select>
+						<v-select
+							placeholder="..."
+							class="style-chooser"
+							label="nama"
+							@input="(product) => { product ? getProduct() : resetItem() }"
+							:options="products"
+							v-model="product">
+						</v-select>
 						</div>
 					<div class="mb-1">
 						<label class="col-form-label" for="_harga">Harga</label>
@@ -144,7 +148,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-primary" v-on:click="addItem" id="add-btn">
+					<button :disabled="!(item.harga && item.qty)" class="btn btn-primary" v-on:click="addItem" id="add-btn">
 						Tambah Item
 					</button>
 				</div>
@@ -154,93 +158,124 @@
 </div>
 @endsection
 @section('css')
-<link href="https://unpkg.com/vue-bootstrap-typeahead/dist/VueBootstrapTypeahead.css" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://unpkg.com/vue-bootstrap-typeahead"></script>
 <script src="https://unpkg.com/vue-select@3.0.0"></script>
 <script>
-Vue.component('vue-bootstrap-typeahead', VueBootstrapTypeahead)
 Vue.component('v-select', VueSelect.VueSelect);
-	const product = () => {
-		return {
-			product_id: null,
-			nama: null,
-			harga: null,
-			qty: null,
-			jumlah: null
-		}
-	}  
+const item = () => {
+	return {
+		product_id: null,
+		nama: null,
+		harga: null,
+		qty: null,
+		jumlah: null
+	}
+} 
+const form = () => {
+	return {
+		kode: null,
+		tanggal: null,
+		customer_id: null,
+		seller_id: null,
+		jumlah: null,
+		items: []
+	}
+}
 new Vue({
   el: '#app',
-  component: VueBootstrapTypeahead,
   data() {
 		return {
 			customers: {!!json_encode($customers)!!},
 			products: {!!json_encode($products)!!},
-			kode: null,
-			tanggal: null,
-			customer_id: null,
-			jumlah: null,
-			total: null,
-			info: null,
-			harga: null,
+			sellers: {!!json_encode($sales)!!},
+			warn: false,
+			error: false,
+			customer: null,
 			product: null,
-			item: product(),
-			items: []
+			seller: null,
+			total: null,
+			form: form(),
+			item: item()
 		}
 	},
-	async created() {
-		await this.setData()
+	created() {
+		this.setData()
 	},
 	computed: {
 		totalItems: function() {
 			let total = 0
-			this.items.forEach(i => {
-				total += i.jumlah
+			this.form.items.forEach(i => {
+				total += (i.harga * i.qty)
 			})
-			this.jumlah = total
+			this.form.jumlah = total
 			return total
 		}
 	},
 	methods: {
-		async setData() {
-			const data = {...await {!!json_encode($so)!!}, items: await {!!json_encode($soDetail)!!}}
-			this.kode = data.kode
-			this.tanggal = data.tanggal
-			this.customer_id = { id: data.customer_id, nama: data.nama }
-			this.potongan = data.potongan
-			this.total = data.total
-			this.jumlah = data.jumlah
-			this.info = data.info
-			this.items = data.items.map(i => {
-				i.jumlah = i.qty * i.harga
-				return {
-					...i
-				}
-			})
+		setData() {
+			this.form = {...{!!json_encode($so)!!}, items: {!!json_encode($soDetail)!!}}
+			this.customer = {!!json_encode($customer)!!}
+			this.seller = {!!json_encode($seller)!!}
 		},
 		formatPrice(value) {
 			let val = (value / 1).toFixed(0).replace('.', ',')
 			return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 		},
-		async Potongan() {
-			this.total = this.jumlah ? this.jumlah - this.potongan : 0
+		getCustomer() {
+			this.form.customer_id = this.customer.id
+			this.form.items = []
+			this.item = item()
+			this.product = null
+			this.warn = false
 		},
-		async getProduct(val) {
-			this.item.product_id = val.id
-			this.item.nama = val.nama
-			this.item.harga = val.jual;
+		getSeller() {
+			this.form.seller_id = this.seller.id
 		},
-		async addItem() {
-			this.item.jumlah = parseInt(this.item.qty) * this.item.harga;
-			await this.items.push(this.item);
-			this.total = this.jumlah - (this.potongan ? this.potongan : 0)
-			this.item = {...product()};
+		resetItem() {
+			this.form.items = []
+			this.item = item()
+			this.product = null
+			this.warn = false
+		},
+		resetForm() {
+			this.form = form()
+			this.item = item()
+			this.product = null
+			this.seller = null
+			this.warn = false
+		},
+		async getProduct() {
+			try {
+				const res = await axios.post(`{{url('api/harga-product')}}/${this.product.id}/${this.customer.type_id}`)
+				if (res.status == 200 && (res.data.harga)) {
+					this.warn = false
+					this.error = false
+					this.item.product_id = this.product.id
+					this.item.nama = this.product.nama
+					this.item.harga = res.data.harga
+				} else {
+					this.warn = true
+					this.item = item()
+				}
+			} catch (e) {
+				this.error = true
+				this.item = item()
+			}
+		},
+		addItem() {
+			this.item.jumlah = parseInt(this.item.qty) * this.item.harga
+			this.form.items.push(this.item)
+			this.total = this.jumlah
+			this.product = null
+			this.item = item()
 			$('#modalToggle').modal('hide')
+		},
+		deleteItem(i) {
+			this.form.items.splice(i, 1)	
 		}
 	}
 })

@@ -8,8 +8,7 @@
 						<h4 class="card-title">Produk Form</h4>
 					</div>
 					<div class="card-body">
-						<form class="form form-horizontal" method="get" action="{{ route('productUpdate', $product['id'])}}">
-						<input type="hidden" nama="o[id]" value="{{$product['id']}}" />
+						<form class="form form-horizontal" method="get" action="{{ route('productUpdate', Crypt::encrypt($product['id']))}}">
 							<div class="row">
 								<div class="col-12">
 									<div class="mb-1 row">

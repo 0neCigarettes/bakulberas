@@ -24,6 +24,21 @@
 								<div class="col-12">
 									<div class="mb-1 row">
 										<div class="col-sm-3">
+											<label class="col-form-label" for="customer_type_id">Tipe customer</label>
+										</div>
+										<div class="col-sm-9">
+											<select id="customer_type_id" autocomplete="off" name="o[customer_type_id]" class="form-select" required="true">
+												@foreach($type as $i)
+												<option value="" selected>...</option>
+												<option value="{{$i->id}}">{{$i->nama}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-12">
+									<div class="mb-1 row">
+										<div class="col-sm-3">
 											<label class="col-form-label" for="nama">Nama</label>
 										</div>
 										<div class="col-sm-9">
@@ -73,6 +88,16 @@
 													<option value="{{$s['id']}}">{{$s['nama']}}</option>
 												@endforeach
 											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-12">
+									<div class="mb-1 row">
+										<div class="col-sm-3">
+											<label class="col-form-label" for="limit_hutang">Limit Hutang</label>
+										</div>
+										<div class="col-sm-9">
+											<input type="number" autocomplete="off" id="limit_hutang" class="form-control" name="o[limit_hutang]" required="true" placeholder="Rp.0"/>
 										</div>
 									</div>
 								</div>

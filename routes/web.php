@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-  return view('layoutes.master');
+  return redirect()->route('home');
 });
 
 Route::prefix('sys')->group(function () {
-
+  Route::get('/dashboard', 'HomeController@index')->name('home');
   Route::prefix('/sales')->group(function () {
     Route::get('/', 'SalesController@index')->name('salesIndex');
     Route::get('/new', 'SalesController@new')->name('salesNew');
@@ -107,6 +107,10 @@ Route::prefix('sys')->group(function () {
     Route::get('/update/{id}', 'ProductsController@update')->name('productUpdate');
     Route::get('/detail/{id}', 'ProductsController@detail')->name('productDetail');
     Route::get('/delete/{id}', 'ProductsController@delete')->name('productDelete');
+    Route::prefix('/harga')->group(function () {
+      Route::post('/', 'ProductsController@addHarga')->name('addHarga');
+      Route::get('/{id}', 'ProductsController@deleteHarga')->name('deleteHarga');
+    });
   });
 
   Route::prefix('/po')->group(function () {
@@ -131,7 +135,6 @@ Route::prefix('sys')->group(function () {
     Route::get('/update/{id}', 'RoController@update')->name('roUpdate');
     Route::get('/detail/{id}', 'RoController@detail')->name('roDetail');
     Route::get('/delete/{id}', 'RoController@delete')->name('roDelete');
-    Route::post('/api-detail/{id}', 'RoController@getPoDetail')->name('apiPoDetail');
   });
 
   Route::prefix('/so')->group(function () {
@@ -142,5 +145,24 @@ Route::prefix('sys')->group(function () {
     Route::get('/update/{id}', 'SoController@update')->name('soUpdate');
     Route::get('/detail/{id}', 'SoController@detail')->name('soDetail');
     Route::get('/delete/{id}', 'SoController@delete')->name('soDelete');
+  });
+
+  Route::prefix('/do')->group(function () {
+    Route::get('/', 'DoController@index')->name('doIndex');
+    // Route::get('/new', 'SoController@new')->name('soNew');
+    // Route::post('/insert', 'SoController@insert')->name('soInsert');
+    // Route::get('/edit/{id}', 'SoController@edit')->name('soEdit');
+    // Route::get('/update/{id}', 'SoController@update')->name('soUpdate');
+    // Route::get('/detail/{id}', 'SoController@detail')->name('soDetail');
+    // Route::get('/delete/{id}', 'SoController@delete')->name('soDelete');
+  });
+
+  Route::prefix('/customer-type')->group(function () {
+    Route::get('/', 'CustomerTypeController@index')->name('customerTypeIndex');
+    Route::get('/create', 'CustomerTypeController@create')->name('customerTypeCreate');
+    Route::post('/store', 'CustomerTypeController@store')->name('customerTypeStore');
+    Route::get('/edit/{id}', 'CustomerTypeController@edit')->name('customerTypeEdit');
+    Route::get('/store/{id}', 'CustomerTypeController@update')->name('customerTypeUpdate');
+    Route::get('/delete/{id}', 'CustomerTypeController@destroy')->name('customerTypeDelete');
   });
 });

@@ -13,7 +13,9 @@
 								<th>Telepon</th>
 								<th>Info</th>
 								<th>Sales</th>
-								<th>Action</th>
+								<th>Tipe</th>
+								<th>Limit Hutang</th>
+								<th class="text-center">Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -29,6 +31,8 @@
 									<td>{{$list['telepon']}}</td>
 									<td>{{$list['info']}}</td>
 									<td>{{$list['namasales']}}</td>
+									<td>{{$list['type']}}</td>
+									<td>Rp.{{number_format($list['limit_hutang'],0,',','.')}}</td>
 									<td class="text-center">
 										<div class="d-inline-flex">
 											<a class="pe-1 dropdown-toggle hide-arrow text-primary" data-bs-toggle="dropdown">

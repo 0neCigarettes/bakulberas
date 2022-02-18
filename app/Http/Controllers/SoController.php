@@ -19,8 +19,8 @@ class SoController extends Controller
         'so.id',
         'so.kode',
         'so.tanggal',
-        'customers.nama',
-        'sales.nama',
+        'customers.nama as customer',
+        'sales.nama as sales',
         'so.jumlah',
         'so.status'
       )->get();
@@ -29,9 +29,9 @@ class SoController extends Controller
 
   public function new()
   {
-    $this->data['customer'] = Customer::Select('id', 'nama')->get();
+    $this->data['customers'] = Customer::Select('id', 'nama', 'customer_type_id as type_id', 'limit_hutang')->get();
     $this->data['sales'] = Sales::Select('id', 'nama')->get();
-    $this->data['products'] = Products::Select('id', 'nama', 'jual')->get();
+    $this->data['products'] = Products::Select('id', 'nama')->get();
     $this->data['time'] = time();
     return view('pages.so.new')->with($this->data);
   }
@@ -51,29 +51,22 @@ class SoController extends Controller
       }
       return redirect()->route('soIndex');
     } else {
-      return $this->new();
+      return redirect()->route('soNew');
     }
   }
 
   public function edit($id)
   {
     $this->data['so'] = So::join('customers', 'customers.id', '=', 'so.customer_id')
-    ->join('sales', 'sales.id', '=', 'so.seller_id')
-      ->select(
-        'so.id',
-        'so.kode',
-        'so.tanggal',
-        'so.customer_id',
-        'so.jumlah',
-        'so.potongan',
-        'so.total',
-        'so.info',
-        'customers.nama',
-        'sales.nama'
-      )->where('so.id', $id)->first()->toArray();
-    $this->data['customers'] = Customers::Select('id', 'nama')->get();
+      ->join('sales', 'sales.id', '=', 'so.seller_id')
+      ->select('so.*')->where('so.id', $id)->first();
+    $this->data['customers'] = Customer::Select('id', 'nama', 'customer_type_id as type_id', 'limit_hutang')->get();
+    $this->data['customer'] = Customer::Select('id', 'nama', 'customer_type_id as type_id', 'limit_hutang')
+      ->Where('id', $this->data['so']->customer_id)->first();
     $this->data['sales'] = Sales::Select('id', 'nama')->get();
-    $this->data['products'] = Products::Select('id', 'nama', 'jual')->get();
+    $this->data['seller'] = Sales::Select('id', 'nama')
+      ->Where('id', $this->data['so']->seller_id)->first();
+    $this->data['products'] = Products::Select('id', 'nama')->get();
     $this->data['time'] = $this->data['so']['kode'];
     $this->data['soDetail'] = SoDetail::join('products', 'products.id', '=', 'so_detail.product_id')
       ->select(
@@ -83,19 +76,14 @@ class SoController extends Controller
         'so_detail.qty',
         'so_detail.harga',
         'products.nama'
-      )->where('so_detail.so_id', $id)->get()->toArray();
-    // return $this->data;
+      )->where('so_detail.so_id', $id)->get();
     return view('pages.so.edit')->with($this->data);
   }
 
   public function update(Request $request, $id)
   {
-    $so = $request['o'];
-    if (is_null($so['potongan'])) {
-      $so['potongan'] = 0;
-    }
-    $so['updated_at'] = now();
-    if ($so = So::find($id)->update($so)) {
+    $so = $request['o'] + ['updated_at' => now()];
+    if ($so = So::Where('id', $id)->update($so)) {
       foreach ($request['items'] as $d) {
         $payload = [
           'so_id' => $id,
@@ -116,7 +104,8 @@ class SoController extends Controller
     }
   }
 
-  public function detail($id) {
+  public function detail($id)
+  {
     $this->data['so'] = So::join('customers', 'customers.id', '=', 'so.customer_id')
       ->join('sales', 'sales.id', '=', 'so.seller_id')
       ->select(

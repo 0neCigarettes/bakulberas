@@ -119,25 +119,25 @@
 					<h5 class="modal-title" id="modalToggleLabel">Tambah Item</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-					<div class="modal-body">
+				<div class="modal-body">
 						<div class="mb-1">
 							<label class="col-form-label">Produk</label>
-								<v-select class="style-chooser" label="nama" placeholder="cari nama produk..." @input="getProduct" :options="products" v-model="product"></v-select>
-							</div>
-							<div class="mb-1">
-								<label class="col-form-label" for="_harga">Harga</label>
-								<input type="text" v-model="item.harga" class="form-control" placeholder="0" required="true" readonly/>
-							</div>
-							<div class="mb-1">
-								<label class="col-form-label">QTY</label>
-								<input type="number" id="_qty" v-model="item.qty" class="form-control" placeholder="0" required="true"/>
-							</div>
+							<v-select class="style-chooser" label="nama" placeholder="cari nama produk..." @input="getProduct" :options="products" v-model="product"></v-select>
 						</div>
-						<div class="modal-footer">
-							<button class="btn btn-primary" :disabled="!item.qty > 0" v-on:click="addItem" id="add-btn">
-								Tambah Item
-							</button>
+						<div class="mb-1">
+							<label class="col-form-label" for="_harga">Harga</label>
+							<input type="text" v-model="item.harga" class="form-control" placeholder="0" required="true" readonly/>
 						</div>
+						<div class="mb-1">
+							<label class="col-form-label">QTY</label>
+							<input type="number" id="_qty" v-model="item.qty" class="form-control" placeholder="0" required="true"/>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" :disabled="!item.qty > 0" v-on:click="addItem" id="add-btn">
+							Tambah Item
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -146,15 +146,6 @@
 @section('css')
 <link href="https://unpkg.com/vue-bootstrap-typeahead/dist/VueBootstrapTypeahead.css" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
-<style>
-	.style-chooser .vs__search::placeholder,
-	.style-chooser .vs__dropdown-toggle,
-	.style-chooser .vs__dropdown-menu {
-	background: #efefef;
-	color: #6e6b7b;
-	height: 40px;
-	}
-</style>
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>

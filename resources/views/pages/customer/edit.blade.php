@@ -9,7 +9,6 @@
 					</div>
 					<div class="card-body">
 						<form class="form form-horizontal" method="get" enctype="multipart/form-data" action="{{ route('customerUpdate', $customer['id'])}}">
-							<input type="hidden" nama="o[id]" value="{{$customer['id']}}" />
 							<div class="row">
 								<div class="col-12">
 									<div class="mb-1 row">
@@ -18,6 +17,21 @@
 										</div>
 										<div class="col-sm-9">
 											<input type="text" autocomplete="off" id="kode" class="form-control" name="o[kode]" required="true" value="{{$customer['kode']}}" readonly="true" />
+										</div>
+									</div>
+								</div>
+								<div class="col-12">
+									<div class="mb-1 row">
+										<div class="col-sm-3">
+											<label class="col-form-label" for="type">Tipe</label>
+										</div>
+										<div class="col-sm-9">
+											<select type="text" autocomplete="off" id="type" class="form-select" name="o[customer_type_id]" required="true">
+												<option value="">...</option>
+												@foreach($type as $key => $value)
+												<option value="{{$value->id}}" {{$customer['type_id'] == $value->id ? 'selected' : ''}}>{{$value['nama']}}</option>
+												@endforeach
+											</select>
 										</div>
 									</div>
 								</div>
@@ -58,6 +72,31 @@
 										</div>
 										<div class="col-sm-9">
 											<textarea id="info" class="form-control" name="o[info]" placeholder="...">{{$customer['info']}}</textarea>
+										</div>
+									</div>
+								</div>
+								<div class="col-12">
+									<div class="mb-1 row">
+										<div class="col-sm-3">
+											<label class="col-form-label" for="sales_id">Tipe</label>
+										</div>
+										<div class="col-sm-9">
+											<select type="text" autocomplete="off" id="sales_id" class="form-select" name="o[sales_id]" required="true">
+												<option value="">...</option>
+												@foreach($sales as $key => $value)
+												<option value="{{$value->id}}" {{$customer['sales_id'] == $value->id ? 'selected' : ''}}>{{$value['nama']}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-12">
+									<div class="mb-1 row">
+										<div class="col-sm-3">
+											<label class="col-form-label" for="limit_hutang">Limit Hutang</label>
+										</div>
+										<div class="col-sm-9">
+											<input type="number" value="{{$customer['limit_hutang']}}" autocomplete="off" id="limit_hutang" class="form-control" name="o[limit_hutang]" required="true" placeholder="Rp.0"/>
 										</div>
 									</div>
 								</div>

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomerType;
 use Illuminate\Http\Request;
-use App\So;
-use App\Customer;
 
-class DoController extends Controller
+class CustomerTypeController extends Controller
 {
   /**
    * Display a listing of the resource.
@@ -15,16 +14,8 @@ class DoController extends Controller
    */
   public function index()
   {
-    $this->data['time'] = time();
-    $this->data['so'] = So::join('customers', 'customers.id', '=', 'so.customer_id')
-      ->join('sales', 'sales.id', '=', 'so.seller_id')
-      ->select(
-        'so.*',
-        'customers.nama as nama_customer',
-        'sales.nama as nama_sales'
-      )->get();
-    $this->data['customers'] = Customer::all();
-    return view('pages.do.index')->with($this->data);
+    $this->data['customerTypes'] = CustomerType::all();
+    return view('pages.customer_type.index')->with($this->data);
   }
 
   /**
@@ -34,7 +25,7 @@ class DoController extends Controller
    */
   public function create()
   {
-    //
+    return view('pages.customer_type.new');
   }
 
   /**
@@ -45,7 +36,10 @@ class DoController extends Controller
    */
   public function store(Request $request)
   {
-    //
+    $model = new \App\CustomerType;
+    if ($model->create($request['o'])) {
+      return redirect()->route('customerTypeIndex');
+    }
   }
 
   /**
@@ -56,7 +50,9 @@ class DoController extends Controller
    */
   public function show($id)
   {
-    //
+    $model = new \App\CustomerType;
+    $this->data['customerType'] = $model->find($id);
+    return view('pages.customer_type.show')->with($this->data);
   }
 
   /**
@@ -67,7 +63,9 @@ class DoController extends Controller
    */
   public function edit($id)
   {
-    //
+    $model = new \App\CustomerType;
+    $this->data['customerType'] = $model->find($id);
+    return view('pages.customer_type.edit')->with($this->data);
   }
 
   /**
@@ -79,7 +77,13 @@ class DoController extends Controller
    */
   public function update(Request $request, $id)
   {
-    //
+    $model = new \App\CustomerType;
+    $payload = $request['o'];
+    $payload['updated_at'] = now();
+    // return $payload;
+    if ($model->find($id)->update($payload)) {
+      return redirect()->route('customerTypeIndex');
+    }
   }
 
   /**
@@ -90,6 +94,10 @@ class DoController extends Controller
    */
   public function destroy($id)
   {
-    //
+    $model = new \App\CustomerType;
+    if ($model->exists($id)) {
+      $model->find($id)->delete();
+      return redirect()->route('customerTypeIndex');
+    }
   }
 }

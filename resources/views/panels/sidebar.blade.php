@@ -45,7 +45,7 @@
 							</ul>
 						</li>
 						@else
-							@if($uri_string === url($item['url'])))
+							@if($uri_string === url($item['url']))
 						<li class="nav-item active">
 							@else
 						<li class="nav-item">

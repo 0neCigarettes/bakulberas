@@ -21,6 +21,11 @@
 		<link rel="stylesheet" type="text/css" href="{{ url('app/app-assets/css/themes/semi-dark-layout.css')}}">
 		<link rel="stylesheet" type="text/css" href="{{ url('app/app-assets/css/core/menu/menu-types/vertical-menu.css')}}">
 		<link rel="stylesheet" type="text/css" href="{{ url('app/assets/css/style.css')}}">
+		<style>
+			.style-chooser .vs__dropdown-toggle {
+				height: 38px;
+			}
+		</style>
 	</head>
 	<body class="vertical-layout vertical-menu-modern navbar-floating footer-static" data-open="click" data-menu="vertical-menu-modern" data-col="">
     @include('panels.toolbar')
@@ -46,7 +51,8 @@
 		<script src="{{ url('app/app-assets/js/core/app.js')}}"></script>
     @yield('js')
 		<script>
-			$(window).on('load', function () {
+			'use strict';
+			$(document).ready(function() {
                 if (feather) {
                     feather.replace({width: 14, height: 14});
                 }
