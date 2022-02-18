@@ -169,7 +169,7 @@ new Vue({
   el: '#app',
   data() {
 		return {
-			customers: {!!json_encode($customer)!!},
+			customers: {!!json_encode($customers)!!},
 			products: {!!json_encode($products)!!},
 			sellers: {!!json_encode($sales)!!},
 			warn: false,
